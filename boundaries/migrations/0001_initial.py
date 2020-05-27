@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('shape', django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326, help_text='The geometry of the boundary in EPSG:4326.')),
                 ('simple_shape', django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326, help_text='The simplified geometry of the boundary in EPSG:4326.')),
                 ('centroid', django.contrib.gis.db.models.fields.PointField(srid=4326, help_text='The centroid of the boundary in EPSG:4326.', null=True)),
-                ('extent', JSONField(blank=True, help_text='The bounding box of the boundary as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.', null=True)),
+                ('extent', JSONField(default=dict, help_text='The bounding box of the boundary as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.', null=True)),
                 ('label_point', django.contrib.gis.db.models.fields.PointField(spatial_index=False, srid=4326, blank=True, help_text='The point at which to place a label for the boundary in EPSG:4326, used by represent-maps.', null=True)),
             ],
             options={
@@ -51,10 +51,10 @@ class Migration(migrations.Migration):
                 ('source_url', models.URLField(help_text='A URL to the source of the data.', blank=True)),
                 ('notes', models.TextField(help_text='Free-form text notes, often used to describe changes that were made to the original source data.', blank=True)),
                 ('licence_url', models.URLField(help_text='A URL to the licence under which the data is made available.', blank=True)),
-                ('extent', JSONField(blank=True, help_text="The set's boundaries' bounding box as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.", null=True)),
+                ('extent', JSONField(default=dict, blank=True, help_text="The set's boundaries' bounding box as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.", null=True)),
                 ('start_date', models.DateField(blank=True, help_text="The date from which the set's boundaries are in effect.", null=True)),
                 ('end_date', models.DateField(blank=True, help_text="The date until which the set's boundaries are in effect.", null=True)),
-                ('extra', JSONField(blank=True, help_text='Any additional metadata.', null=True)),
+                ('extra', JSONField(default=dict, blank=True, help_text='Any additional metadata.', null=True)),
             ],
             options={
                 'ordering': ('name',),

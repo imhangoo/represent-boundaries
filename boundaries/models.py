@@ -60,7 +60,7 @@ class BoundarySet(models.Model):
         help_text=ugettext_lazy('Free-form text notes, often used to describe changes that were made to the original source data.'))
     licence_url = models.URLField(blank=True,
         help_text=ugettext_lazy('A URL to the licence under which the data is made available.'))
-    extent = JSONField(blank=True, null=True,
+    extent = JSONField(default=dict, null=True,
         help_text=ugettext_lazy("The set's boundaries' bounding box as a list like [xmin, ymin, xmax, ymax] in EPSG:4326."))
     start_date = models.DateField(blank=True, null=True,
         help_text=ugettext_lazy("The date from which the set's boundaries are in effect."))
@@ -148,7 +148,7 @@ class Boundary(models.Model):
         help_text=ugettext_lazy('The simplified geometry of the boundary in EPSG:4326.'))
     centroid = models.PointField(null=True,
         help_text=ugettext_lazy('The centroid of the boundary in EPSG:4326.'))
-    extent = JSONField(blank=True, null=True,
+    extent = JSONField(default=dict, blank=True, null=True,
         help_text=ugettext_lazy('The bounding box of the boundary as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.'))
     label_point = models.PointField(blank=True, null=True, spatial_index=False,
         help_text=ugettext_lazy('The point at which to place a label for the boundary in EPSG:4326, used by represent-maps.'))

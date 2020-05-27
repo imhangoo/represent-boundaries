@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='boundary',
             name='metadata',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default={}, encoder=django.core.serializers.json.DjangoJSONEncoder, help_text='The attributes of the boundary from the shapefile, as a dictionary.'),
+            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder, help_text='The attributes of the boundary from the shapefile, as a dictionary.'),
         ),
     ]

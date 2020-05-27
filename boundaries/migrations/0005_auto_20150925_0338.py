@@ -23,11 +23,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='boundary',
             name='metadata',
-            field=JSONField(blank=True, default={}, help_text='The attributes of the boundary from the shapefile, as a dictionary.'),
+            field=JSONField(blank=True, default=dict, help_text='The attributes of the boundary from the shapefile, as a dictionary.'),
         ),
         migrations.AlterField(
             model_name='boundaryset',
             name='extra',
-            field=JSONField(blank=True, default={}, help_text='Any additional metadata.'),
+            field=JSONField(blank=True, default=dict, help_text='Any additional metadata.'),
         ),
     ]

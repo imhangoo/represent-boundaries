@@ -16,21 +16,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='boundary',
             name='extent',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, help_text='The bounding box of the boundary as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.', null=True),
+            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, help_text='The bounding box of the boundary as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.', null=True),
         ),
         migrations.AlterField(
             model_name='boundary',
             name='metadata',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default={}, help_text='The attributes of the boundary from the shapefile, as a dictionary.'),
+            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, help_text='The attributes of the boundary from the shapefile, as a dictionary.'),
         ),
         migrations.AlterField(
             model_name='boundaryset',
             name='extent',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, help_text="The set's boundaries' bounding box as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.", null=True),
+            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, help_text="The set's boundaries' bounding box as a list like [xmin, ymin, xmax, ymax] in EPSG:4326.", null=True),
         ),
         migrations.AlterField(
             model_name='boundaryset',
             name='extra',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default={}, help_text='Any additional metadata.'),
+            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, help_text='Any additional metadata.'),
         ),
     ]
