@@ -24,6 +24,7 @@ setup(
     ],
     install_requires=[
         'django-appconf',
+        'alive_progress'
     ],
     extras_require={
         'test': 'testfixtures',

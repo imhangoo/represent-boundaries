@@ -20,6 +20,8 @@ from django.utils.translation import ugettext as _
 import boundaries
 from boundaries.models import app_settings, BoundarySet, Boundary, Definition, Feature
 
+from alive_progress import alive_bar
+
 log = logging.getLogger(__name__)
 
 
@@ -65,31 +67,32 @@ class Command(BaseCommand):
             blacklist = set(options['except'].split(','))
         else:
             blacklist = set()
+        with alive_bar(len(boundaries.registry.items())) as bar:
+            for slug, definition in boundaries.registry.items():
+                bar()
+                name = slug
+                slug = slugify(slug)
 
-        for slug, definition in boundaries.registry.items():
-            name = slug
-            slug = slugify(slug)
+                if self.loadable(slug, definition['last_updated'], whitelist, blacklist, options['reload']):
+                    #log.info(_('Processing %(slug)s.') % {'slug': slug})
 
-            if self.loadable(slug, definition['last_updated'], whitelist, blacklist, options['reload']):
-                log.info(_('Processing %(slug)s.') % {'slug': slug})
+                    # Backwards-compatibility with having the name, instead of the slug,
+                    # as the first argument to `boundaries.register`.
+                    definition.setdefault('name', name)
+                    definition = Definition(definition)
 
-                # Backwards-compatibility with having the name, instead of the slug,
-                # as the first argument to `boundaries.register`.
-                definition.setdefault('name', name)
-                definition = Definition(definition)
+                    data_sources, tmpdirs = create_data_sources(definition['file'], encoding=definition['encoding'], convert_3d_to_2d=options['clean'])
 
-                data_sources, tmpdirs = create_data_sources(definition['file'], encoding=definition['encoding'], convert_3d_to_2d=options['clean'])
-
-                try:
-                    if not data_sources:
-                        log.warning(_('No shapefiles found.'))
-                    else:
-                        self.load_boundary_set(slug, definition, data_sources, options)
-                finally:
-                    for tmpdir in tmpdirs:
-                        rmtree(tmpdir)
-            else:
-                log.debug(_('Skipping %(slug)s.') % {'slug': slug})
+                    try:
+                        if not data_sources:
+                            log.warning(_('No shapefiles found.'))
+                        else:
+                            self.load_boundary_set(slug, definition, data_sources, options)
+                    finally:
+                        for tmpdir in tmpdirs:
+                            rmtree(tmpdir)
+                else:
+                    log.debug(_('Skipping %(slug)s.') % {'slug': slug})
 
     def loadable(self, slug, last_updated, whitelist=[], blacklist=[], reload_existing=False):
         """
@@ -129,7 +132,7 @@ class Command(BaseCommand):
         boundary_set.extent = [None, None, None, None]  # [xmin, ymin, xmax, ymax]
 
         for data_source in data_sources:
-            log.info(_('Loading %(slug)s from %(source)s') % {'slug': slug, 'source': data_source.name})
+            #log.info(_('Loading %(slug)s from %(source)s') % {'slug': slug, 'source': data_source.name})
 
             layer = data_source[0]
             layer.source = data_source  # to trace the layer back to its source
@@ -144,7 +147,7 @@ class Command(BaseCommand):
                 feature.layer = layer  # to trace the feature back to its source
 
                 if feature.is_valid():
-                    log.info(_('%(slug)s...') % {'slug': feature.slug})
+                    #log.info(_('%(slug)s...') % {'slug': feature.slug})
 
                     boundary = self.load_boundary(feature, options['merge'])
                     boundary_set.extend(boundary.extent)
@@ -152,7 +155,7 @@ class Command(BaseCommand):
         if None not in boundary_set.extent:  # unless there are no features
             boundary_set.save()
 
-        log.info(_('%(slug)s count: %(count)i') % {'slug': slug, 'count': Boundary.objects.filter(set=boundary_set).count()})
+        #log.info(_('%(slug)s count: %(count)i') % {'slug': slug, 'count': Boundary.objects.filter(set=boundary_set).count()})
 
     def load_boundary(self, feature, merge_strategy=None):
         if merge_strategy:
